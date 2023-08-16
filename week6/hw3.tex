@@ -1,0 +1,55 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{physics}
+\usepackage{amsmath}
+\usepackage[]{amsthm} %lets us use \begin{proof}
+\usepackage[]{amssymb} %gives us the character \varnothing
+
+\title{Advanced Data Analysis\\Homework Week 6}
+\author{Aswin Vijay}
+\date\today
+%This information doesn't actually show up on your document unless you use the make title command below
+
+\begin{document}
+\maketitle %This command prints the title based on information entered above
+
+%Section and subsection automatically number unless you put the asterisk next to them.
+\section*{Homework 6}
+
+Delta in the last layer of for the $j^th$ unit in multi-class classification is,
+\begin{align*}
+    \delta_j^{(L)} &= \partialderivative{J_n}{u_j^{(L)}}\\
+    J_n(w) &= -\sum_{k=1}^{K} y_{nk}\log f_k (x_n;w)\\
+    f_k = z_k^{(L)} &= \frac{exp(u_k^{(L)})}{\sum_{j=1}^{K}exp(u_j^{(L)})}
+\end{align*}
+For $K$ output clsses and $n^{th}$ sample. Then $J_n$ becomes,
+\begin{align*}
+    J_n(w) &= -\sum_{k=1}^{K} y_{nk}\log \frac{exp(u_k^{(L)})}{\sum_{j=1}^{K}exp(u_j^{(L)})}\\
+    J_n(w) &= -\sum_{k=1}^{K} y_{nk}\log f_k\\
+    \partialderivative{J_n}{u_j^{(L)}} &= \partialderivative{J_n}{f_k}\cdot \partialderivative{f_k}{u_j^{(L)}} \\
+    \partialderivative{J_n}{u_j^{(L)}} &= - \sum_{k=1}^{K}\frac{y_{nk}}{f_k} \cdot \partialderivative{f_k}{u_j^{(L)}} \\
+\end{align*}
+
+We need to calculate $\partialderivative{f_k}{u_j^{(L)}} = \partialderivative{z_k^{(L)}}{u_j^{(L)}}$. Let us compute the following derivative,
+\begin{align*}
+    \partialderivative{}{u_j^{}}\frac{exp(u_k)}{\sum_{i=1}^{K}exp(u_i)}\\
+\end{align*}
+Case 1: when $k=j$
+\begin{align*}
+    \partialderivative{}{u_j^{}}\frac{exp(u_j)}{\sum_{i=1}^{K}exp(u_i)} = \frac{\sum_{i=1}^{K}exp(u_i)^2-exp(u_j)^2}{\sum_{i=1}^{K}exp(u_i)^2} = f_j(1-f_j)\\
+\end{align*}
+Case 2: when $k \ne j$
+\begin{align*}
+    \partialderivative{}{u_j^{}}\frac{exp(u_k)}{\sum_{i=1}^{K}exp(u_i)} = \frac{-exp(u_j)exp(u_k)}{\sum_{i=1}^{K}exp(u_i)^2} = f_k f_j\\
+\end{align*}
+Using the above we have,
+\begin{align*}
+    \partialderivative{J_n}{u_j^{(L)}} &= - \sum_{k=1}^{K}\frac{y_{nk}}{f_k} \cdot \partialderivative{f_k}{u_j^{(L)}} = - \sum_{k=1}^{K} \cdot y_nk (1-f_j)\\
+\end{align*}
+Since $y_{nk} = 1$ only when $k = j$, we can further simlify as,
+\begin{align*}
+    \partialderivative{J_n}{u_j^{(L)}} &= f_j - y_{nj}
+\end{align*}
+Thus proven.
+\end{document}

@@ -1,0 +1,65 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{physics}
+\usepackage{amsmath}
+\usepackage[]{amsthm} %lets us use \begin{proof}
+\usepackage[]{amssymb} %gives us the character \varnothing
+
+\title{Advanced Data Analysis\\Homework Week 2}
+\author{Aswin Vijay}
+\date\today
+%This information doesn't actually show up on your document unless you use the make title command below
+
+\begin{document}
+\maketitle %This command prints the title based on information entered above
+
+%Section and subsection automatically number unless you put the asterisk next to them.
+\section*{Homework 2}
+
+The Mean Squared Error for Leave one out Cross Validation is given by,
+\begin{align*}
+    MSE = \frac{1}{n}\sum_{i=1}^{n}\biggl(\hat{f}_i(x_i)-y_i\biggr)^2
+\end{align*}
+where $\hat{f}_i(x)$ is learned from data other than $(x_i,y_i)$.
+The given linear model is,
+\begin{align*}
+    f_\theta(x) = \sum_{j=1}^{b}\theta_j\phi(x)_j = \phi^T\theta
+\end{align*}
+Calculating optimal $\hat{\theta_i}$ learned by removing $(x_i,y_i)$ we get the optimization objective as,
+\begin{align*}
+    \hat{\theta}_i = \arg\min_\theta\biggl[\frac{1}{2}\biggl(\sum_{k=1}^{n}(f_\theta(x_k)-y_k)^2 - (f_\theta(x_i)-y_i)^2\biggr) + \frac{\lambda}{2}||\theta||^2\biggr]
+\end{align*}
+Using $\Phi,\mathbf{y},\mathbf{\theta},\phi_i,y_i$ we get the regularized objective as,
+\begin{align*}
+    \hat{\theta}_i = \arg\min_\theta\biggl[\frac{1}{2}||\Phi\mathbf{\theta}-\mathbf{y}||^2 - \frac{1}{2}||\phi_i\theta-y_i||^2 + \frac{\lambda}{2}||\theta||^2\biggr]
+\end{align*}
+Taking the derivative and setting to zero we get,
+\begin{align*}
+    \nabla_\theta\biggl[\frac{1}{2}||\Phi\mathbf{\theta}-\mathbf{y}||^2 - \frac{1}{2}||\phi_i\theta-y_i||^2 + \frac{\lambda}{2}||\theta||^2\biggr] &= 0\\
+    \Phi^T\Phi\theta-\Phi^T\mathbf{y} - \phi_i^T\phi_i\theta + \phi_iy_i+\lambda\theta = 0\\
+    \hat{\theta}_i = \frac{\Phi^T\mathbf{y} - \phi_iy_i}{\Phi^T\Phi\ - \phi_i^T\phi_i +\lambda I }
+\end{align*}
+Where, Setting $U = \Phi^T\Phi\ +\lambda I$ we get,
+\begin{align*}
+    \hat{\theta}_i = \frac{\Phi^T\mathbf{y} - \phi_iy_i}{U - \phi_i^T\phi_i }
+\end{align*}
+Calculating the MSE using prediction for $y_i$ as $\phi_i^T\hat{\theta}_i$ and summing the squared error we get,
+\begin{align*}
+    MSE = \frac{1}{n}\sum_{i=1}^{n}\biggl(\phi_i^T\hat{\theta}_i-y_i\biggr)^2\\
+    =\frac{1}{n}\sum_{i=1}^{n}\biggl(\phi_i^T\biggl[\frac{\Phi^T\mathbf{y} - \phi_iy_i}{U - \phi_i^T\phi_i }\biggr] - y_i\biggr)^2 \\
+    =\frac{1}{n}\sum_{i=1}^{n}\biggl[(U - \phi_i^T\phi_i)^{-1}(\phi_i^T\Phi^T\mathbf{y} - \phi_i^T\phi_iy_i) - y_i\biggr]^2 
+\end{align*}
+Using the special case of Sherman-Morrison-Woodbury below we have,
+\begin{align*}
+    MSE &= \frac{1}{n}\sum_{i=1}^{n}\biggl[(U - \phi_i^T\phi_i)^{-1}(\phi_i^T\Phi^T\mathbf{y} - \phi_i^T\phi_iy_i) - y_i\biggr]^2 \\
+    &=  \frac{1}{n}\sum_{i=1}^{n}\biggl[(U - \phi_i^T\phi_i)^{-1}(\phi_i^T\Phi^T\mathbf{y} - U y_i)\biggr]^2 \\
+    &= \frac{1}{n}||(U - \Phi^T\Phi)^{-1}(\Phi^T\Phi^T\mathbf{y} - U \mathbf{y})||^2 \\
+    &=  \frac{1}{n}||\biggl([U^{-1}+\frac{U^{-1}\Phi^T\Phi U^{-1}}{I-\Phi U^{-1}\Phi^T}] [\Phi^T\Phi^T\mathbf{y} - U \mathbf{y}]\biggr)||^2 \ \ Sherman-Morrison-Woodbury\\
+    &= \frac{1}{n}||\biggl(U^{-1}\Phi^T\Phi^T\mathbf{y}-\mathbf{y}+\frac{U^{-1}\Phi^T\Phi U^{-1}\Phi^T\Phi^T\mathbf{y}- U^{-1}\Phi^T\Phi \mathbf{y}}{I-\Phi U^{-1}\Phi^T}\biggr)||^2
+\end{align*}
+Next we expand out the denominators and using $H = I-\Phi U^{-1}\Phi^T$ we get the result,
+\begin{align*}
+    MSE = \frac{1}{n} \norm{\frac{H \mathbf{y}}{H}}
+\end{align*}
+\end{document}

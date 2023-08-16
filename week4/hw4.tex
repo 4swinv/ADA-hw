@@ -1,0 +1,79 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{physics}
+\usepackage{amsmath}
+\usepackage[]{amsthm} %lets us use \begin{proof}
+\usepackage[]{amssymb} %gives us the character \varnothing
+
+\title{Advanced Data Analysis\\Homework Week 4}
+\author{Aswin Vijay}
+\date\today
+%This information doesn't actually show up on your document unless you use the make title command below
+
+\begin{document}
+\maketitle %This command prints the title based on information entered above
+
+%Section and subsection automatically number unless you put the asterisk next to them.
+\section*{Homework 4}
+
+Given the least squares classification objective as,
+\begin{align*}
+    \hat{\theta} = arg \min_{\theta}\frac{1}{2}\sum_{i=1}^{n}(f_\theta(x_i)-y_i)^2
+\end{align*}
+with mean zero inputs,
+\begin{align}
+    \frac{1}{n}\sum_{i=1}^{x_i} = 0
+\end{align}
+and linear input model,
+\begin{align*}
+    f_\theta(x)=\theta^T x
+\end{align*}
+Given the solution to the least squares objective as,
+\begin{align}
+    (X^T X)\hat{\theta} = X^T y
+\end{align}
+The class means and variance are given as,
+\begin{align*}
+    \mu_{-} &= \frac{1}{n_{-}}\sum_{i:y_i=-1}^{} x_i\\
+    \mu_{+} &= \frac{1}{n_{+}}\sum_{i:y_i= 1}^{} x_i\\
+    \hat{\Sigma}_{-} &= \frac{1}{n_{-}}\sum_{i:y_i=-1}^{}(x_i-\mu_{-})(x_i-\mu_{-})^T\\
+    \hat{\Sigma}_{+} &= \frac{1}{n_{+}}\sum_{i:y_i=1}^{}(x_i-\mu_{+})(x_i-\mu_{+})^T\\
+    \hat{\Sigma} &= \frac{1}{n}\biggl(n_{+}\hat{\Sigma}_{+}+n_{-}\hat{\Sigma}_{-}\biggr)
+\end{align*}
+where $\hat{\Sigma}$ is the MLE of the common covariance matrix.\\
+
+\vspace*{10pt}
+\noindent Next we try to express Eqn (1) and (2) in terms of the means and covariances.
+\begin{align*}
+    \frac{1}{n}\sum_{i=1}^{x_i} = 0\\
+    \frac{1}{n}(n_{-}\mu_{-}+n_{+}\mu_{+}) = 0\\
+    \mu_{-} = -\frac{n_{+}\mu_{+}}{n_{-}}
+\end{align*}
+Let the $y$ labels be $\{\frac{-1}{n_{-}},\frac{1}{n_{+}}\}$, then
+for RHS of (2) we have
+\begin{align*}
+    X^T y &= -\frac{1}{n_{-}}\sum_{i:y_i=-1}^{} x_i + \frac{1}{n_{+}}\sum_{i:y_i=1}^{} x_i \\
+          &=  \mu_{+}-\mu_{-}\\
+          &=  \mu_{+}\frac{n}{n_{-}}
+\end{align*}
+For LHS of (2) we have,
+\begin{align*}
+    \hat{\Sigma} &= \frac{1}{n}\biggl( \sum_{i:y_i=-1}^{}(x_i-\mu_{-})(x_i-\mu_{-})^T + \sum_{i:y_i=1}^{}(x_i-\mu_{+})(x_i-\mu_{+})^T \biggr)\\
+                 &= \frac{1}{n}\biggl( \sum_{i:y_i=-1}^{}(x_i x_i^T -x_i\mu_{-}^T -\mu_{-}x_i^T + \mu_{-}\mu_{-}^T) + \sum_{i:y_i=1}^{}(x_i x_i^T -x_i\mu_{+}^T -\mu_{+}x_i^T + \mu_{+}\mu_{+}^T) \biggr)\\
+                 &= \frac{1}{n}\biggl(X^TX + - n_{-}\mu_{-}^T\mu_{-} - n_{+}\mu_{+}^T\mu_{+} \biggr)\\
+    X^TX         &= n \hat{\Sigma} +  n_{-}\mu_{-}^T\mu_{-} + n_{+}\mu_{+}^T\mu_{+}\\
+    X^TX         &= n \hat{\Sigma} + \frac{n^2}{n_{-}}\mu_{+}\mu_{+}^T + n_{+}\mu_{+}\mu_{+}^T
+\end{align*}
+Using the above results in Eqn (2) we get,
+\begin{align*}
+    \biggl[n \hat{\Sigma} + \frac{n^2}{n_{-}}\mu_{+}\mu_{+}^T + n_{+}\mu_{+}\mu_{+}^T\biggr]\hat{\theta} &= \mu_{+}\frac{n}{n_{-}} \\
+    \biggl[\hat{\Sigma} + (\frac{n}{n_{-}} + n_{+})\mu_{+}\mu_{+}^T\biggr]\hat{\theta} &= \mu_{+}\frac{1}{n_{-}}\\
+    \hat{\Sigma} \hat{\theta} + (\frac{n}{n_{-}} + n_{+})c\mu_{+} &= \mu_{+}\frac{1}{n_{-}}\ \ \ using\ v v^T\theta = cv \\ 
+    \hat{\Sigma}\cdot\hat{\theta} &= \mu_{+}(\frac{1}{n_{-}}-c(\frac{n}{n_{-}} + n_{+}))\\
+    \hat{\Sigma}\cdot\hat{\theta} &= (\mu_{+}-\mu_{-})\frac{n_{-}}{n}(\frac{1}{n_{-}}-c(\frac{n}{n_{-}} + n_{+}))\\
+    \hat{\Sigma}\cdot\hat{\theta} &= (\mu_{+}-\mu_{-})(\frac{1}{n}-c(1 + \frac{n_{+}n_{-}}{n}))\\
+    \hat{\theta} \propto \hat{\Sigma}^{-1}(\mu_{+}-\mu_{-})\\
+\end{align*}
+Thus we get he desired result
+\end{document}

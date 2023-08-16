@@ -1,0 +1,45 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{physics}
+\usepackage{amsmath}
+\usepackage[]{amsthm} %lets us use \begin{proof}
+\usepackage[]{amssymb} %gives us the character \varnothing
+
+\title{Advanced Data Analysis\\Homework Week 3}
+\author{Aswin Vijay}
+\date\today
+%This information doesn't actually show up on your document unless you use the make title command below
+
+\begin{document}
+\maketitle %This command prints the title based on information entered above
+
+%Section and subsection automatically number unless you put the asterisk next to them.
+\section*{Homework 3}
+
+Given the linear model $f_\theta(x) = \sum_{j=1}^{b}\theta_j \phi_j(x)$, where
+$\{\phi_j(x)\}_{j=1}^{b}$ are the basis functions, the weighted least squares
+objective is given by,
+\begin{align*}
+    \hat{\theta} = \min_{\theta} \frac{1}{2}\sum_{i=1}^{n} \tilde{w}_i\biggl(f_\theta(x_i)-y_i\biggr)^2
+\end{align*}
+To derive the analytical solution we rewrite the above objective using the weighting
+matrix $\tilde{W} = diag(\tilde{w}_1,\dots,\tilde{w}_n)$ in matrix format as shown below.
+
+\begin{align*}
+    \hat{\theta} = \min_{\theta} \biggl[\frac{1}{2} (\Phi\theta - \mathbf{y})^T \tilde{W} (\Phi\theta - \mathbf{y}) \biggr]
+\end{align*}
+where $\Phi$ is the design matrix and $\mathbf{y} = (y_1,\dots,y_n)^T$. Expanding the brackets and then taking the 
+derivative w.r.t $\theta$ we get,
+\begin{align*}
+    \hat{\theta} &= \min_{\theta} \biggl[\frac{1}{2} (\Phi\theta - \mathbf{y})^T \tilde{W} (\Phi\theta - \mathbf{y}) \biggr]\\
+                 &= \min_{\theta} \biggl[\frac{1}{2} (\theta^T\Phi^T - \mathbf{y}^T) \tilde{W} (\Phi\theta - \mathbf{y}) \biggr]\\
+                 &= \min_{\theta} \biggl[\frac{1}{2} (\theta^T\Phi^T - \mathbf{y}^T) \tilde{W} (\Phi\theta - \mathbf{y}) \biggr]\\
+                 &= \min_{\theta} \frac{1}{2}  \biggl[ \theta^T\Phi^T\tilde{W}\Phi\theta-\theta^T\Phi^T\tilde{W}\mathbf{y}-\mathbf{y}^T\tilde{W}\Phi\theta+\mathbf{y}^T\tilde{W}\mathbf{y}\biggr] \ \ Taking\ derivative\ w.r.t\ \theta\\
+                 &= \biggl[ \Phi^T\tilde{W}\Phi\theta-\Phi^T\tilde{W}\mathbf{y}\biggr] = 0\\
+\end{align*}
+Thus we get the required result,
+\begin{align*}
+    \hat{\theta} &= (\Phi^T\tilde{W}\Phi)^{-1}\Phi^T\tilde{W}\mathbf{y}
+\end{align*}
+\end{document}

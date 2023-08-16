@@ -1,0 +1,74 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{physics}
+\usepackage{amsmath}
+\usepackage[]{amsthm} %lets us use \begin{proof}
+\usepackage[]{amssymb} %gives us the character \varnothing
+
+\title{Advanced Data Analysis\\Homework Week 5}
+\author{Aswin Vijay}
+\date\today
+%This information doesn't actually show up on your document unless you use the make title command below
+
+\begin{document}
+\maketitle %This command prints the title based on information entered above
+
+%Section and subsection automatically number unless you put the asterisk next to them.
+\section*{Homework 5}
+
+Given the complimentary slackness conditions of SVM,
+\begin{align}
+    \alpha_i(y_i w^T x_i - 1 + \xi_i) = 0\\
+    \beta_i \xi_i = 0
+\end{align}
+and from the dual problem,
+\begin{align}
+    y_i w^T x_i - 1 + \xi_i &\geq 0\\
+    \xi_i &\geq 0\\
+    \alpha_i + \beta_i &= C
+\end{align}
+
+To prove:
+\subsubsection*{1) $\alpha_i=0\implies y_i w^T x_i \geq 1$}
+\begin{align*}
+    &\alpha_i = 0\\
+    &\implies \beta_i = C\ (Eq.\ 5)\\
+    &\implies \xi_i = 0\ (Eq.\ 2)\\
+    &\implies y_i w^T x_i - 1 \geq 0\ (Eq.\ 3)\\
+    &\implies y_i w^T x_i \geq 1
+\end{align*}
+\subsubsection*{2) $0 < \alpha_i< C\implies y_i w^T x_i = 1$}
+\begin{align*}
+    0 < \alpha_i < C\\
+    &\implies y_i w^T x_i - 1 + \xi_i = 0\ (Eq.\ 1)\\ 
+    &\implies 0 < C - \beta_i < C\ (Eq.\ 5)\\
+    &\implies 0 < C - \beta_i < C\\
+    &\implies C > \beta_i > 0\\
+    &\implies \xi_i = 0\ (Eq.\ 2)\\
+    &\implies  y_i w^T x_i = 1\ (From\ above)
+\end{align*}
+\subsubsection*{3) $\alpha_i = C\implies y_i w^T x_i \leq 1$}
+\begin{align*}
+    &\alpha_i = C\\
+    &\implies \beta_i = 0\ (Eq.\ 5)\\
+    &\implies  y_i w^T x_i - 1 + \xi_i = 0\ (Eq.\ 1)\\
+    &\implies  y_i w^T x_i = 1 - \xi_i\\
+    &\implies  y_i w^T x_i \leq 1 \ (Eq.\ 4)
+\end{align*}
+\subsubsection*{4) $y_i w^T x_i > 1 \implies \alpha_i = 0$}
+\begin{align*}
+    &y_i w^T x_i - 1>0\ Given\\
+    &\implies y_i w^T x_i - 1 + \xi_1>0\ (Eq.\ 4)\\
+    &\implies  \alpha_i = 0\ (Eq.\ 1)
+\end{align*}
+\subsubsection*{5) $y_i w^T x_i < 1 \implies \alpha_i = C$}
+\begin{align*}
+    &y_i w^T x_i - 1<0\ Given\\
+    &but,\ y_i w^T x_i - 1 + \xi_i \geq 0\ (Eq.\ 3)\\
+    &\implies \xi_i > 0\ (\xi_i\ can't\ be\ 0)\\
+    &\implies \beta_i = 0\ (Eq.\ 2)\\
+    &\implies \alpha_i = C\ (Eq.\ 5)
+\end{align*}
+Thus proven.
+\end{document}

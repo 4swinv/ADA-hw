@@ -1,0 +1,84 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage[a4paper, total={6in, 8in}]{geometry}
+\usepackage{physics}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage[]{amsthm} %lets us use \begin{proof}
+\usepackage[]{amssymb} %gives us the character \varnothing
+\DeclareMathOperator{\E}{\mathbb{E}}
+
+\title{Advanced Data Analysis\\Homework Week 10}
+\author{Aswin Vijay}
+\date\today
+%This information doesn't actually show up on your document unless you use the make title command below
+
+\begin{document}
+\maketitle %This command prints the title based on information entered above
+
+%Section and subsection automatically number unless you put the asterisk next to them.
+\section{Question}
+We are given the following squared energy distance:
+\begin{align}
+    \mathbf{D_E^2} &= 2 \E_{x'\sim p_{test}, x\sim q_{\pi}} ||x'-x|| - \E_{x', \tilde{x}' \sim p_{test}} ||x'- \tilde{x}'|| \\ 
+    &\quad - \E_{x, \tilde{x} \sim q_{\pi}} ||x-\tilde{x}|| \nonumber \\ 
+    q_{\pi}(x) &= \pi p_{train}(x|y = +1) + (1-\pi)p_{train}(x|y = -1)
+\end{align}
+We need to derive the following for $D_E(p_{test, q_{\pi}})$ w.r.t $\pi$:
+\begin{align}
+    J(\pi) = (2 A_{+1,-1} - A_{+1,+1}-A_{-1,-1})\pi^2 - 2(A_{+1,-1} - A_{-1,-1} - b_{+1} + b_{-1})\pi 
+    \\ \ +\ Const \nonumber
+\end{align}
+where,
+\begin{align}
+    A_{y,\tilde{y}} = \E_{x \sim p_{train}, \tilde{x} \sim p_{train}(x|\tilde{y})} || x - \tilde{x} || \\
+    b_y =  \E_{x' \sim p_{test}, x \sim p_{train}(x|y)} || x' - x ||
+\end{align}
+we are also given that,
+\begin{align}
+    \E_{\tilde{x} \sim q_{\pi}} [f(\tilde{x})] = \pi \E_{\tilde{x} \sim p_{train}(\tilde{x}|+1)}[f(\tilde{x})] + (1-\pi)\E_{\tilde{x} \sim p_{train}(\tilde{x}|-1)}[f(\tilde{x})]
+\end{align}
+\textit{Derivation} $(x',\tilde{x}')$ and $(x,\tilde{x})$:\vspace*{10pt}\\
+To derive the expression for $J(\pi)$, substitute (6) into (1) :
+\begin{align*}
+\mathbf{D_E^2} &= 2 \E_{x'\sim p_{test}, x'\sim q_{\pi}} ||x'-x|| - \E_{x', \tilde{x}' \sim p_{test}} ||x'- \tilde{x}'|| - \E_{x, \tilde{x} \sim q_{\pi}} ||x-\tilde{x}|| \\
+&= 2 \E_{x'\sim p_{test}, x'\sim q_{\pi}} ||x'-x|| - \E_{x', \tilde{x}' \sim p_{test}} ||x'- \tilde{x}'|| - \E_{x \sim q_{\pi}}[\pi \E_{\tilde{x} \sim p_{train}(\tilde{x}|y=+1)} ||x-\tilde{x}|| \\
+&\quad + (1-\pi) \E_{\tilde{x} \sim p_{train}(\tilde{x}|y=-1)} ||x-\tilde{x}||]
+\end{align*}
+Rearranging we get:
+\begin{align*}
+\mathbf{D_E^2} &= 2 \E_{x'\sim p_{test}}\left[\E_{x\sim q_{\pi}} ||x'-x||\right] - \E_{x', \tilde{x}' \sim p_{test}} ||x'- \tilde{x}'|| \\
+&\quad - \pi \E_{x \sim q_{\pi}, \tilde{x} \sim p_{train}(\tilde{x}|y=+1)} ||x-\tilde{x}|| - (1-\pi) \E_{x \sim q_{\pi}, \tilde{x} \sim p_{train}(\tilde{x}|y=-1)} ||x-\tilde{x}||
+\end{align*}
+For the first term we get:
+\begin{align*}
+2 \E_{x'\sim p_{test}}\left[\E_{x\sim q_{\pi}} ||x'-x||\right] &= 2 \E_{x'\sim p_{test}}\left[\ \pi \E_{x \sim p_{train}(x|+1)}[||x'-x||] + (1-\pi)\E_{x \sim p_{train}(x|-1)}[||x'-x||] \right] \\
+&= 2 \pi \left(\E_{x'\sim p_{test}, x\sim p_{train}(x|y=+1)} ||x'-x||\right) + 2(1-\pi) \left(\E_{x'\sim p_{test}, x\sim p_{train}(x|y=-1)} ||x'-x||\right) \\
+&= 2 \pi b_{+1} + 2(1-\pi) b_{-1}\ using\ (5)
+\end{align*}
+For the second term:
+\begin{align*}
+\E_{x'\sim p_{test}, \tilde{x}' \sim p_{test}} ||x'- \tilde{x}'|| &= const \ (independent\ of\ \pi)
+\end{align*}
+For the third term:
+\begin{align*}
+&\pi \E_{x\sim q_{\pi}, \tilde{x} \sim p_{train}(x|y=+1)} ||x-\tilde{x}|| = \pi\E_{x \sim q_{\pi}}||x-\tilde{x}|| \cdot \E_{\tilde{x} \sim p_{train}(\tilde{x}|y=+1)} ||x-\tilde{x}||\\
+&= \pi(\pi \E_{x \sim p_{train}(x|y=+1)}||x-\tilde{x}|| + (1-\pi)\E_{x \sim p_{train}(x|y=-1)}||x-\tilde{x}||)\E_{\tilde{x} \sim p_{train}(\tilde{x}|y=+1)} ||x-\tilde{x}||\\
+&= \pi^2(\E_{x \sim p_{train}(x|y=+1),\tilde{x} \sim p_{train}(\tilde{x}|y=+1)}||x-\tilde{x}||) + (\pi - \pi^2)(\E_{x \sim p_{train}(x|y=-1),\tilde{x} \sim p_{train}(\tilde{x}|y=+1)}||x-\tilde{x}||)\\
+&= \pi^2 A_{+1,+1} + (\pi - \pi^2)A_{-1,+1}\ using\ (4)
+\end{align*}
+Similarly the fourth term can be written as:
+\begin{align*}
+(1-\pi) \E_{x\sim q_{\pi}, \tilde{x} \sim p_{train}(x|y=-1)} ||x-\tilde{x}|| &= \pi\E_{x \sim q_{\pi}}||x-\tilde{x}|| \cdot \E_{\tilde{x} \sim p_{train}(\tilde{x}|y=-1)} ||x-\tilde{x}||\\
+& = (\pi - \pi^2) A_{+1,-1} + (1 - \pi)^2 A_{-1,-1}\ using\ (4)
+\end{align*}
+Substituting these results back into $\mathbf{D_E^2}$ we get:
+\begin{align*}
+\mathbf{D_E^2} &= J(\pi) = 2 \pi b_{+1} + 2(1-\pi) b_{-1} - \pi^2 A_{+1,+1} - (\pi - \pi^2)A_{-1,+1} - (\pi - \pi^2) A_{+1,-1} - (1 - \pi)^2 A_{-1,-1}\\
+&= (2 A_{+1,-1} -A_{+1,+1} - A_{-1,-1})\pi^2 - 2(A_{+1,-1} - A_{-1,-1} - b_{+1} + b_{-1})\pi + const\\ & \quad (A_{+1,-1}=A_{-1,+1})
+\end{align*}
+Thus, we have derived the expression for $J(\pi)$.
+The constant terms independent of $\pi$ has been absorbed into the const term in $J(\pi)$.
+
+\end{document}
